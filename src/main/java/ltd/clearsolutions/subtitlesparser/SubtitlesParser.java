@@ -1,51 +1,54 @@
 package ltd.clearsolutions.subtitlesparser;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import org.jsoup.Jsoup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class SubtitlesParser {
 
-    public static List<SubtitlesData> subtitlesParser(String pathToFile) throws IOException {
+    private static final Logger logger = LoggerFactory.getLogger(SubtitlesParser.class);
 
-        // Масивы хранения данных.
-        List<SubtitlesData> piecesOfSubtitles = new ArrayList<>();
-        List<String> temporary = new ArrayList<>();
+    private static final String NUMBERS = "(\\d+)";
+    private static final String TIME = "([\\d]{2}:[\\d]{2}:[\\d]{2},[\\d]{3}).*([\\d]{2}:[\\d]{2}:[\\d]{2},[\\d]{3})";
+    List<Subtitle> piecesOfSubtitles = new ArrayList<>();
 
-        // В место "0, 1, 2 -> index + 1, index + 2".
-        int index = 0;
+    public void subtitlesParser(File file) {
 
-        // Чтение файла в список.
-        Path path = Paths.get(pathToFile);
-        List<String> readFile = Files.readAllLines(path);
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            int index = 0;
+            Subtitle subtitles = new Subtitle();
 
-        // Счетчик для блока текста
-        for (int i = 0; i < readFile.size(); i++) {
+            while ((line = reader.readLine()) != null) {
 
-            // Строки вида String, String, String, ""
-            while (!readFile.get(i).equals("")) {
-                // Запись во временный масив, чтоб легче было записывать элементы.
-                temporary.add(readFile.get(i));
-                // Счеткик для строки
-                i++;
-                if (i == readFile.size())
-                    break;
+                if (line.matches(NUMBERS)) {
+                    index++;
+                    if (index > 1) {
+                        piecesOfSubtitles.add(subtitles);
+                        subtitles = new Subtitle();
+                    }
+                    subtitles.setNumber(line);
+                } else if (line.matches(TIME)) {
+                    subtitles.setTime(line);
+                } else if (line.length() > 0) {
+                    subtitles.addText(removeHTML(line));
+                }
             }
 
-            // Запись одного куска + всех субтитров после 2 строки.
-            piecesOfSubtitles.add(new SubtitlesData(
-                    temporary.get(index),
-                    temporary.get(index + 1),
-                    temporary.stream().skip(index + 2).collect(Collectors.toList())));
+            piecesOfSubtitles.add(subtitles);
 
-            // Каждый раз очищаеться временный масив чтоб заходили только следующие элементы.
-            temporary.clear();
+        } catch (Throwable e) {
+            logger.warn(e.getMessage());
         }
+    }
 
-        return piecesOfSubtitles;
+    private String removeHTML(String line) {
+        return Jsoup.parse(line).text();
     }
 }
