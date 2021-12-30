@@ -1,5 +1,6 @@
 package ltd.clearsolutions.subtitlesparser;
 
+import ltd.clearsolutions.subtitlesparser.exception.IncorrectTimeDataException;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -21,7 +22,7 @@ class SubtitleTest {
         String time = "00:00:49 --> 00:00:51,801";
         Subtitle subtitle = new Subtitle();
 
-        Subtitle.IncorrectTimeData thrown = assertThrows(Subtitle.IncorrectTimeData.class, () -> subtitle.setTime(time));
+        IncorrectTimeDataException thrown = assertThrows(IncorrectTimeDataException.class, () -> subtitle.setTime(time));
         assertThat(thrown).hasMessageEndingWith("The time type is incorrect");
     }
 }

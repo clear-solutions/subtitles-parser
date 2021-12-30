@@ -1,5 +1,6 @@
 package ltd.clearsolutions.subtitlesparser;
 
+import ltd.clearsolutions.subtitlesparser.exception.IncorrectTimeDataException;
 import org.jsoup.Jsoup;
 
 import java.text.ParseException;
@@ -41,13 +42,7 @@ public class Subtitle {
             startTime = mSdf.parse(temp.get(0)).getTime();
             endTime = mSdf.parse(temp.get(1)).getTime();
         } catch (ParseException e) {
-            throw new IncorrectTimeData("The time type is incorrect");
-        }
-    }
-
-    public static class IncorrectTimeData extends RuntimeException {
-        public IncorrectTimeData(String message) {
-            super(message);
+            throw new IncorrectTimeDataException("The time type is incorrect");
         }
     }
 

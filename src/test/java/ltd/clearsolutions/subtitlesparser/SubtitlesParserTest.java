@@ -1,5 +1,6 @@
 package ltd.clearsolutions.subtitlesparser;
 
+import ltd.clearsolutions.subtitlesparser.exception.SubtitleParserException;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -16,8 +17,8 @@ class SubtitlesParserTest {
 
 
     @Test
-    void subtitlesParser_FirstPieceOfTheFile_FirstItemText() {
-        Subtitle expected = subtitlesParser.subtitlesParser(file).get(0);
+    void subtitlesParser_FirstPieceOfTheFile_FirstItemText() throws SubtitleParserException {
+        Subtitle expected = subtitlesParser.getSubtitles(file).get(0);
 
         assertThat(1).isEqualTo(expected.number);
         assertThat(49048).isEqualTo(expected.startTime);
@@ -26,28 +27,29 @@ class SubtitlesParserTest {
     }
 
     @Test
-    void subtitlesParser_LastPieceOfTheFile_LastItemText() {
-        int size = subtitlesParser.subtitlesParser(file).size() - 1;
-        Subtitle expected = subtitlesParser.subtitlesParser(file).get(size);
+    void subtitlesParser_LastPieceOfTheFile_LastItemText() throws SubtitleParserException {
+        List<Subtitle> expected = subtitlesParser.getSubtitles(file);
+        int size = expected.size()-1;
 
-        assertThat(405).isEqualTo(expected.number);
-        assertThat(3239485).isEqualTo(expected.startTime);
-        assertThat(3244407).isEqualTo(expected.endTime);
-        assertThat(List.of("Subtitle translation by: Eun-sook Yoon")).isEqualTo(expected.text);
+        assertThat(405).isEqualTo(expected.get(size).number);
+        assertThat(3239485).isEqualTo(expected.get(size).startTime);
+        assertThat(3244407).isEqualTo(expected.get(size).endTime);
+        assertThat(List.of("Subtitle translation by: Eun-sook Yoon")).isEqualTo(expected.get(size).text);
     }
 
     @Test
-    void subtitlesParser_FileWithHTML_LastItemText() {
+    void subtitlesParser_FileWithHTML_LastItemText() throws SubtitleParserException {
         String path = "src/test/resources/HTMLSubs.srt";
         File file = new File(path);
         SubtitlesParser subtitlesParser = new SubtitlesParser();
 
-        int size = subtitlesParser.subtitlesParser(file).size() - 1;
-        Subtitle expected = subtitlesParser.subtitlesParser(file).get(size);
 
-        assertThat(663).isEqualTo(expected.number);
-        assertThat(3060989).isEqualTo(expected.startTime);
-        assertThat(3063992).isEqualTo(expected.endTime);
-        assertThat(List.of("[CLOSING THEME MUSIC]")).isEqualTo(expected.text);
+        List<Subtitle> expected = subtitlesParser.getSubtitles(file);
+        int size = expected.size()-1;
+
+        assertThat(663).isEqualTo(expected.get(size).number);
+        assertThat(3060989).isEqualTo(expected.get(size).startTime);
+        assertThat(3063992).isEqualTo(expected.get(size).endTime);
+        assertThat(List.of("[CLOSING THEME MUSIC]")).isEqualTo(expected.get(size).text);
     }
 }
