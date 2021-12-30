@@ -1,5 +1,7 @@
 package ltd.clearsolutions.subtitlesparser;
 
+import org.jsoup.Jsoup;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,23 +11,23 @@ import java.util.TimeZone;
 
 public class Subtitle {
     Integer number;
-    Double startTime;
-    Double endTime;
+    long startTime;
+    long endTime;
     List<String> text = new ArrayList<>();
 
     public void addText(String line) {
-        text.add(line);
+        text.add(removeHTML(line));
     }
 
     public void setNumber(String number) {
         this.number = Integer.parseInt(number);
     }
 
-    public Double getStartTime() {
+    public long getStartTime() {
         return startTime;
     }
 
-    public Double getEndTime() {
+    public long getEndTime() {
         return endTime;
     }
 
@@ -36,8 +38,8 @@ public class Subtitle {
         List<String> temp = Arrays.stream(line.split("-->")).map(String::trim).toList();
 
         try {
-            startTime = mSdf.parse(temp.get(0)).getTime() / 1000.0;
-            endTime = mSdf.parse(temp.get(1)).getTime() / 1000.0;
+            startTime = mSdf.parse(temp.get(0)).getTime();
+            endTime = mSdf.parse(temp.get(1)).getTime();
         } catch (ParseException e) {
             throw new IncorrectTimeData("The time type is incorrect");
         }
@@ -47,6 +49,10 @@ public class Subtitle {
         public IncorrectTimeData(String message) {
             super(message);
         }
+    }
+
+    private String removeHTML(String line) {
+        return Jsoup.parse(line).text();
     }
 }
 

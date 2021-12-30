@@ -19,22 +19,24 @@ class SubtitlesParserTest {
     void subtitlesParser_FirstPieceOfTheFile_FirstItemText() {
         SubtitlesParser subtitlesParser = new SubtitlesParser();
         subtitlesParser.subtitlesParser(file);
+        Subtitle expected = subtitlesParser.subtitlesParser(file).get(0);
 
-        assertThat(1).isEqualTo(subtitlesParser.piecesOfSubtitles.get(0).number);
-        assertThat(49.048).isEqualTo(subtitlesParser.piecesOfSubtitles.get(0).startTime);
-        assertThat(51.801).isEqualTo(subtitlesParser.piecesOfSubtitles.get(0).endTime);
-        assertThat(List.of("EPISODE 9", "ONE LUCKY DAY")).isEqualTo(subtitlesParser.piecesOfSubtitles.get(0).text);
+        assertThat(1).isEqualTo(expected.number);
+        assertThat(49048).isEqualTo(expected.startTime);
+        assertThat(51801).isEqualTo(expected.endTime);
+        assertThat(List.of("EPISODE 9", "ONE LUCKY DAY")).isEqualTo(expected.text);
     }
 
     @Test
     void subtitlesParser_LastPieceOfTheFile_LastItemText() {
         SubtitlesParser subtitlesParser = new SubtitlesParser();
         subtitlesParser.subtitlesParser(file);
-        int size = subtitlesParser.piecesOfSubtitles.size() - 1;
+        int size = subtitlesParser.subtitlesParser(file).size() - 1;
+        Subtitle expected = subtitlesParser.subtitlesParser(file).get(size);
 
-        assertThat(405).isEqualTo(subtitlesParser.piecesOfSubtitles.get(size).number);
-        assertThat(3239.485).isEqualTo(subtitlesParser.piecesOfSubtitles.get(size).startTime);
-        assertThat(3244.407).isEqualTo(subtitlesParser.piecesOfSubtitles.get(size).endTime);
-        assertThat(List.of("Subtitle translation by: Eun-sook Yoon")).isEqualTo(subtitlesParser.piecesOfSubtitles.get(size).text);
+        assertThat(405).isEqualTo(expected.number);
+        assertThat(3239485).isEqualTo(expected.startTime);
+        assertThat(3244407).isEqualTo(expected.endTime);
+        assertThat(List.of("Subtitle translation by: Eun-sook Yoon")).isEqualTo(expected.text);
     }
 }

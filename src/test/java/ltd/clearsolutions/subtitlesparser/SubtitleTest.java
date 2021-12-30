@@ -11,7 +11,7 @@ class SubtitleTest {
         String time = "00:00:49,048 --> 00:00:51,801";
         Subtitle subtitle = new Subtitle();
         subtitle.setTime(time);
-        assertThat(49.048).isEqualTo(subtitle.getStartTime());
-        assertThat(51.801).isEqualTo(subtitle.getEndTime());
+        assertThat(49048).isEqualTo(subtitle.getStartTime());
+        assertThat(51801).isEqualTo(subtitle.getEndTime());
     }
 }
