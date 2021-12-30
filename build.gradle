@@ -31,9 +31,12 @@ ext {
     logbackVersion = '1.2.10'
     junitVersion = '5.8.2'
     assertjVersion = '3.21.0'
+    jsoupVersion = '1.14.3'
 }
 
 dependencies {
+
+    implementation "org.jsoup:jsoup:${jsoupVersion}"
 
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
     implementation "ch.qos.logback:logback-core:${logbackVersion}"
