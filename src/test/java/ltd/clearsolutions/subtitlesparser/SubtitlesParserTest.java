@@ -16,7 +16,7 @@ class SubtitlesParserTest {
 
 
     @Test
-    void subtitlesParser_FirstPieceOfTheFile_FirstItemText() throws IOException {
+    void subtitlesParser_FirstPieceOfTheFile_FirstItemText() {
         SubtitlesParser subtitlesParser = new SubtitlesParser();
         subtitlesParser.subtitlesParser(file);
 
@@ -27,7 +27,7 @@ class SubtitlesParserTest {
     }
 
     @Test
-    void subtitlesParser_LastPieceOfTheFile_LastItemText() throws IOException {
+    void subtitlesParser_LastPieceOfTheFile_LastItemText() {
         SubtitlesParser subtitlesParser = new SubtitlesParser();
         subtitlesParser.subtitlesParser(file);
         int size = subtitlesParser.piecesOfSubtitles.size() - 1;
