@@ -11,18 +11,19 @@ class SubtitleTest {
     @Test
     void setTime_CorrectTimeString_TimeInMillisecond() {
         String time = "00:00:49,048 --> 00:00:51,801";
-        Subtitle subtitle = new Subtitle();
-        subtitle.setTime(time);
-        assertThat(49048).isEqualTo(subtitle.getStartTime());
-        assertThat(51801).isEqualTo(subtitle.getEndTime());
+        SubtitlesParser.ProcessingSubtitle processingSubtitle = new SubtitlesParser.ProcessingSubtitle();
+
+        processingSubtitle.setTime(time);
+        assertThat(49048).isEqualTo(processingSubtitle.getStartTime());
+        assertThat(51801).isEqualTo(processingSubtitle.getEndTime());
     }
 
     @Test
     void setTime_IncorrectTimeString_ExceptionIncorrectTimeData() {
         String time = "00:00:49 --> 00:00:51,801";
-        Subtitle subtitle = new Subtitle();
+        SubtitlesParser.ProcessingSubtitle processingSubtitle = new SubtitlesParser.ProcessingSubtitle();
 
-        IncorrectTimeDataException thrown = assertThrows(IncorrectTimeDataException.class, () -> subtitle.setTime(time));
+        IncorrectTimeDataException thrown = assertThrows(IncorrectTimeDataException.class, () -> processingSubtitle.setTime(time));
         assertThat(thrown).hasMessageEndingWith("The time type is incorrect");
     }
 }
